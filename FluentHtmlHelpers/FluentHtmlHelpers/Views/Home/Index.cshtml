@@ -1,5 +1,41 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Alert Box Examples";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
+
+<h3>The markup</h3>
+
+<div class="alert-box">
+    This is a standard alert (div.alert-box).
+  					<a href="" class="close">×</a>
+</div>
+
+<div class="alert-box success">
+    This is a success alert (div.alert-box.success).
+  					<a href="" class="close">×</a>
+</div>
+
+<div class="alert-box alert">
+    This is an alert (div.alert-box.alert).
+  					<a href="" class="close">×</a>
+</div>
+
+<div class="alert-box secondary">
+    This is a secondary alert (div.alert-box.secondary).
+  					<a href="" class="close">×</a>
+</div>
+
+@section scripts
+{
+    <script>
+        //On Page Load
+        (function ($) {
+            $(function () {
+                //Attach plugins
+                //Alerts plugin
+                $(document).foundationAlerts();
+            });
+        })(jQuery);
+    </script>
+}
