@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AlertBoxTest.cs" />
     <Compile Include="HtmlHelperFactory.cs" />
     <Compile Include="HtmlHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,9 @@
       <Project>{2db5f8b9-92e0-4911-85e2-a4a4441da383}</Project>
       <Name>MyHelpers</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AlterHelperSpec.html" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
