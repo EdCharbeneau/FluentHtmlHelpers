@@ -17,10 +17,27 @@ namespace MyHelpers
             this.text = text;
         }
 
+        private string RenderAlert()
+        {
+
+            var wrapper = new TagBuilder("div");
+            wrapper.AddCssClass("alert-box");
+
+            var closeButton = new TagBuilder("a");
+            closeButton.AddCssClass("close");
+            closeButton.Attributes.Add("href", "");
+            closeButton.InnerHtml = "×";
+
+            wrapper.InnerHtml = text;
+            wrapper.InnerHtml += closeButton.ToString();
+
+            return wrapper.ToString();
+        }
+
         //Render HTML
         public override string ToString()
         {
-            return "";
+            return RenderAlert();
         }
 
         //Return ToString

@@ -14,7 +14,7 @@ namespace MyHelpers.Test
             //@Html.Alert(text:"message")
 
             //arrange
-            string htmlAlert = @"<div class='alert-box'>message<a href='' class='close'>×</a></div>";
+            string htmlAlert = @"<div class=""alert-box"">message<a class=""close"" href="""">×</a></div>";
             var html = HtmlHelperFactory.Create();
 
             //act
