@@ -1,0 +1,40 @@
+﻿//Given the Alert HTML Helper method
+//Then Render the HTML
+
+//Default Alert
+@Html.Alert(text:"message") [.NoCloseButton()]
+
+<div class="alert-box">
+    Message
+  					<a href="" class="close">×</a>
+</div>
+
+//Success Alert
+
+@Html.Alert(text:"message", style:AlertStyle.Success [,closeButton:false ,htmlAttributes:object])
+@Html.Alert(text:"message").Success() [.NoCloseButton().Attributes(object)] //Fluent
+
+<div class="alert-box success">
+    Message
+  					<a href="" class="close">×</a>
+</div>
+
+//Warning Alert
+
+@Html.Alert(text:"message", style:AlertStyle.Warning [,closeButton:false ,htmlAttributes:object])
+@Html.Alert(text:"message").Warning()[.NoCloseButton().Attributes(object)] //Fluent
+
+<div class="alert-box alert">
+    Message
+  					<a href="" class="close">×</a>
+</div>
+
+//Info Alert
+
+@Html.Alert(text:"message", style:AlertStyle.Info [,closeButton:false ,htmlAttributes:object])
+@Html.Alert(text:"message").Info()[.NoCloseButton().Attributes(object)] //Fluent
+
+<div class="alert-box secondary">
+    Message
+  					<a href="" class="close">×</a>
+</div>
