@@ -1,30 +1,57 @@
-using System;
 using System.Web.Mvc;
-using System.Web;
-using System.Web.UI;
 
 namespace MyHelpers
 {
-    public class AlertBox : IHtmlString
+    public class AlertBox : IAlertBox
     {
-        private readonly HtmlHelper html;
-
         private readonly string text;
 
-        private readonly AlertStyle alertStyle;
+        private AlertStyle alertStyle;
 
-        private readonly bool hideCloseButton;
+        private bool hideCloseButton;
 
-        private readonly object htmlAttributes;
+        private object htmlAttributes;
 
-        public AlertBox(HtmlHelper html, string text, AlertStyle style, bool hideCloseButton, object htmlAttributes = null)
+        public AlertBox(string text, AlertStyle style, bool hideCloseButton, object htmlAttributes = null)
         {
-            this.html = html;
             this.text = text;
             this.alertStyle = style;
             this.hideCloseButton = hideCloseButton;
             this.htmlAttributes = htmlAttributes;
         }
+
+        #region FluentAPI
+
+        public IAlertBoxFluentOptions Success()
+        {
+            alertStyle = AlertStyle.Success;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        public IAlertBoxFluentOptions Warning()
+        {
+            alertStyle = AlertStyle.Warning;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        public IAlertBoxFluentOptions Info()
+        {
+            alertStyle = AlertStyle.Info;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        public IAlertBoxFluentOptions HideCloseButton()
+        {
+            hideCloseButton = true;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        public IAlertBoxFluentOptions Attributes(object htmlAttributes)
+        {
+            this.htmlAttributes = htmlAttributes;
+            return new AlertBoxFluentOptions(this);
+        }
+        #endregion //FluentAPI
 
         private string RenderAlert()
         {
@@ -40,11 +67,11 @@ namespace MyHelpers
 
             //build html
             wrapper.InnerHtml = text;
-            
+
             //Add close button
             if (!hideCloseButton)
                 wrapper.InnerHtml += RenderCloseButton();
-            
+
             return wrapper.ToString();
         }
 

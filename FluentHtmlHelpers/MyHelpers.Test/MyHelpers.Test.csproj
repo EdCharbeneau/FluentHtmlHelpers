@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AlertBoxFluentTest.cs" />
     <Compile Include="AlertBoxTest.cs" />
     <Compile Include="HtmlHelperFactory.cs" />
     <Compile Include="HtmlHelperTest.cs" />

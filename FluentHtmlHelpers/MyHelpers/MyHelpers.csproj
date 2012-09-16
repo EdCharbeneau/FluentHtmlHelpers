@@ -43,8 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlertBox.cs" />
+    <Compile Include="AlertBoxFluentOptions.cs" />
     <Compile Include="AlertHtmlHelper.cs" />
     <Compile Include="AlertStyle.cs" />
+    <Compile Include="IAlertBox.cs" />
+    <Compile Include="IAlertBoxFluentOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

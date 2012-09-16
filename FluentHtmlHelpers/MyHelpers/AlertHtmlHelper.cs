@@ -19,7 +19,7 @@ namespace MyHelpers
             object htmlAttributes = null
             )
         {
-            return new AlertBox(html, text, alertStyle, hideCloseButton, htmlAttributes);
+            return new AlertBox(text, alertStyle, hideCloseButton, htmlAttributes);
         }
     }
 }
