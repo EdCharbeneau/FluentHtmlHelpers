@@ -1,4 +1,5 @@
-﻿@{
+﻿@using MyHelpers;
+@{
     ViewBag.Title = "Alert Box Examples";
 }
 
@@ -16,15 +17,31 @@
   					<a href="" class="close">×</a>
 </div>
 
-<div class="alert-box alert">
-    This is an alert (div.alert-box.alert).
+<div class="alert-box warning">
+    This is an warning (div.alert-box.warning).
   					<a href="" class="close">×</a>
 </div>
 
-<div class="alert-box secondary">
-    This is a secondary alert (div.alert-box.secondary).
+<div class="alert-box info">
+    This is a info alert (div.alert-box.info).
   					<a href="" class="close">×</a>
 </div>
+
+<h3>Fluent API</h3>
+
+@Html.Alert("Message")
+
+@Html.Alert("Message").Success()
+
+@Html.Alert("Message").Warning()
+
+@Html.Alert("Message").Info()
+
+@Html.Alert("No close button").Info().HideCloseButton().Attributes(new { data_special = "SpecialAttribute" })
+
+<h4>Standard API</h4>
+
+@Html.Alert("Another message", hideCloseButton:true)
 
 @section scripts
 {
