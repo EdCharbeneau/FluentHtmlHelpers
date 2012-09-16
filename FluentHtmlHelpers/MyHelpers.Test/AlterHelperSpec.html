@@ -11,7 +11,7 @@
 
 //Success Alert
 
-@Html.Alert(text:"message", style:AlertStyle.Success [,closeButton:false ,htmlAttributes:object])
+@Html.Alert(text:"message", style:AlertStyle.Success [,hideCloseButton:false ,htmlAttributes:object])
 @Html.Alert(text:"message").Success() [.NoCloseButton().Attributes(object)] //Fluent
 
 <div class="alert-box success">
@@ -21,7 +21,7 @@
 
 //Warning Alert
 
-@Html.Alert(text:"message", style:AlertStyle.Warning [,closeButton:false ,htmlAttributes:object])
+@Html.Alert(text:"message", style:AlertStyle.Warning [,hideCloseButton:false ,htmlAttributes:object])
 @Html.Alert(text:"message").Warning()[.NoCloseButton().Attributes(object)] //Fluent
 
 <div class="alert-box warning">
@@ -31,7 +31,7 @@
 
 //Info Alert
 
-@Html.Alert(text:"message", style:AlertStyle.Info [,closeButton:false ,htmlAttributes:object])
+@Html.Alert(text:"message", style:AlertStyle.Info [,hideCloseButton:false ,htmlAttributes:object])
 @Html.Alert(text:"message").Info()[.NoCloseButton().Attributes(object)] //Fluent
 
 <div class="alert-box info">

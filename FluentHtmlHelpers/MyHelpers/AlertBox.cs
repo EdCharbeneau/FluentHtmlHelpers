@@ -13,11 +13,14 @@ namespace MyHelpers
 
         private readonly AlertStyle alertStyle;
 
-        public AlertBox(HtmlHelper html, string text, AlertStyle style)
+        private readonly bool hideCloseButton;
+
+        public AlertBox(HtmlHelper html, string text, AlertStyle style, bool hideCloseButton)
         {
             this.html = html;
             this.text = text;
             this.alertStyle = style;
+            this.hideCloseButton = hideCloseButton;
         }
 
         private string RenderAlert()
@@ -28,17 +31,25 @@ namespace MyHelpers
                 wrapper.AddCssClass(alertStyle.ToString().ToLower());
             wrapper.AddCssClass("alert-box");
 
+
+            //build html
+            wrapper.InnerHtml = text;
+            
+            //Add close button
+            if (!hideCloseButton)
+                wrapper.InnerHtml += RenderCloseButton();
+            
+            return wrapper.ToString();
+        }
+
+        private static TagBuilder RenderCloseButton()
+        {
             //<a href="" class="close">x</a>
             var closeButton = new TagBuilder("a");
             closeButton.AddCssClass("close");
             closeButton.Attributes.Add("href", "");
             closeButton.InnerHtml = "×";
-
-            //build html
-            wrapper.InnerHtml = text;
-            wrapper.InnerHtml += closeButton.ToString();
-
-            return wrapper.ToString();
+            return closeButton;
         }
 
         //Render HTML
@@ -52,6 +63,6 @@ namespace MyHelpers
         {
             return ToString();
         }
-       
+
     }
 }

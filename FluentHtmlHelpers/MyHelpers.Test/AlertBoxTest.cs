@@ -6,6 +6,7 @@ namespace MyHelpers.Test
     [TestClass]
     public class AlertBoxTest
     {
+
         [TestMethod]
         public void ShouldCreateDefaultAlert()
         {
@@ -22,7 +23,7 @@ namespace MyHelpers.Test
 
             //assert
             Assert.AreEqual(htmlAlert, result, ignoreCase: true);
-            
+
         }
 
         [TestMethod]
@@ -37,10 +38,10 @@ namespace MyHelpers.Test
             var html = HtmlHelperFactory.Create();
 
             //act
-            var result = html.Alert("message",AlertStyle.Success).ToHtmlString();
+            var result = html.Alert("message", AlertStyle.Success).ToHtmlString();
 
             //assert
-            Assert.AreEqual(htmlAlert, result, ignoreCase: true);            
+            Assert.AreEqual(htmlAlert, result, ignoreCase: true);
         }
 
         [TestMethod]
@@ -78,6 +79,27 @@ namespace MyHelpers.Test
             //assert
             Assert.AreEqual(htmlAlert, result, ignoreCase: true);
         }
+
+        [TestMethod]
+        public void ShouldCreateDefaultAlertWithCloseHidden()
+        {
+            //Spec
+            //Should render an default alert box with close hidden
+            //@Html.Alert(text:"message", hideCloseButton:true)
+
+            //arrange
+            string htmlAlert = @"<div class=""alert-box"">message</div>";
+            var html = HtmlHelperFactory.Create();
+
+            //act
+            var result = html.Alert("message",hideCloseButton:true).ToHtmlString();
+
+            //assert
+            Assert.AreEqual(htmlAlert, result, ignoreCase: true);
+
+        }
+
+       
 
     }
 }
