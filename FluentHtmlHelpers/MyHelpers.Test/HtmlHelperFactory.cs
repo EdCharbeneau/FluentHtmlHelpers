@@ -5,8 +5,13 @@ using System.Web.Mvc;
 
 namespace MyHelpers.Test
 {
+    //Creates an HtmlHelper for unit testing
     class HtmlHelperFactory
     {
+        /// <summary>
+        /// Create a new HtmlHelper with a fake context and container
+        /// </summary>
+        /// <returns>HtmlHelper</returns>
         public static HtmlHelper Create()
         {
             var vc = new ViewContext();

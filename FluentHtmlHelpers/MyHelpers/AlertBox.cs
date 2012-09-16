@@ -12,7 +12,14 @@ namespace MyHelpers
 
         private object htmlAttributes;
 
-        public AlertBox(string text, AlertStyle style, bool hideCloseButton, object htmlAttributes = null)
+        /// <summary>
+        /// Returns a div alert box element with the options specified
+        /// </summary>
+        /// <param name="text">Sets the text to display</param>
+        /// <param name="style">Sets style of alert box [Default | Success | Warning | Info ]</param>
+        /// <param name="hideCloseButton">Sets the close button visibility</param>
+        /// <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+        public AlertBox(string text, AlertStyle style, bool hideCloseButton = false, object htmlAttributes = null)
         {
             this.text = text;
             this.alertStyle = style;
@@ -22,30 +29,50 @@ namespace MyHelpers
 
         #region FluentAPI
 
+        /// <summary>
+        /// Sets the display style to Success
+        /// </summary>
         public IAlertBoxFluentOptions Success()
         {
             alertStyle = AlertStyle.Success;
             return new AlertBoxFluentOptions(this);
         }
 
+        /// <summary>
+        /// Sets the display style to Warning
+        /// </summary>
+        /// <returns></returns>
         public IAlertBoxFluentOptions Warning()
         {
             alertStyle = AlertStyle.Warning;
             return new AlertBoxFluentOptions(this);
         }
 
+        /// <summary>
+        /// Sets the display style to Info
+        /// </summary>
+        /// <returns></returns>
         public IAlertBoxFluentOptions Info()
         {
             alertStyle = AlertStyle.Info;
             return new AlertBoxFluentOptions(this);
         }
-
-        public IAlertBoxFluentOptions HideCloseButton()
+        
+        /// <summary>
+        /// Sets the close button visibility
+        /// </summary>
+        /// <returns></returns>
+        public IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true)
         {
-            hideCloseButton = true;
+            this.hideCloseButton = hideCloseButton;
             return new AlertBoxFluentOptions(this);
         }
 
+        /// <summary>
+        /// An object that contains the HTML attributes to set for the element.
+        /// </summary>
+        /// <param name="htmlAttributes"></param>
+        /// <returns></returns>
         public IAlertBoxFluentOptions Attributes(object htmlAttributes)
         {
             this.htmlAttributes = htmlAttributes;

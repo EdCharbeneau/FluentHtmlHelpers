@@ -4,7 +4,7 @@ namespace MyHelpers
 {
     public interface IAlertBoxFluentOptions : IHtmlString
     {
-        IAlertBoxFluentOptions HideCloseButton();
+        IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true);
         IAlertBoxFluentOptions Attributes(object htmlAttributes);
     }
 }

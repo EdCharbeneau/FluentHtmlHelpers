@@ -16,9 +16,9 @@ namespace MyHelpers
             this.parent = parent;
         }
 
-        public IAlertBoxFluentOptions HideCloseButton()
+        public IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true)
         {
-            return parent.HideCloseButton();
+            return parent.HideCloseButton(hideCloseButton);
         }
 
         public IAlertBoxFluentOptions Attributes(object htmlAttributes)
