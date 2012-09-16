@@ -99,7 +99,24 @@ namespace MyHelpers.Test
 
         }
 
-       
+        [TestMethod]
+        public void ShouldCreateDefaultAlertWithAttributes()
+        {
+            //Spec
+            //Should render an default alert box
+            //@Html.Alert(text:"message", htmlAttributes: new {id = "MyControlId"})
+
+            //arrange
+            string htmlAlert = @"<div class=""alert-box"" id=""MyControlId"">message<a class=""close"" href="""">×</a></div>";
+            var html = HtmlHelperFactory.Create();
+
+            //act
+            var result = html.Alert("message", htmlAttributes: new { id = "MyControlId" }).ToHtmlString();
+
+            //assert
+            Assert.AreEqual(htmlAlert, result, ignoreCase: true);
+
+        }     
 
     }
 }
