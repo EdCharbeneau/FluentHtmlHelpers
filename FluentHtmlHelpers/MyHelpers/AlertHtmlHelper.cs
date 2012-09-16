@@ -12,9 +12,9 @@ namespace MyHelpers
     /// </summary>
     public static class AlertHtmlHelper
     {
-        public static AlertBox Alert(this HtmlHelper html, string text)
+        public static AlertBox Alert(this HtmlHelper html, string text, AlertStyle alertStyle = AlertStyle.Default)
         {
-            return new AlertBox(html, text);
+            return new AlertBox(html, text, alertStyle);
         }
     }
 }
