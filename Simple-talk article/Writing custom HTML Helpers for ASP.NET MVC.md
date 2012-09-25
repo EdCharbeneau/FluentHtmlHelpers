@@ -12,11 +12,18 @@ The HTML helper, in most cases, is a method that returns a string. When called i
 Writing extensions for the HtmlHelper class will allow us to create our own custom helpers to encapsulate complex HTML markup. Custom helpers promote the use of reusable code and are unit testable. Custom helpers can be configured by passing values to the constructor, via fluent configuration, strongly typed or a combination of and ultimately return a string. 
 
 ##HOW TO BEGIN
-Reusable Html elements
 
-Alert
+The first step in writing an HTML helper is finding code within our project that we intend on reusing. For the extent of this article I will be using an Alert message as an example. The alert is a UI element that displays a message and has a default, success, warning, or information style. The alert element’s markup is simple in construction but gives us an adequate sample for the scope of this article.
 
-HTML, CSS and Javascript
+![This is how the alert element looks in the browser.](./images/Alert-box.jpg)
+
+Next we’ll examine the alert markup and see how we can break it down and construct reusable piece of content. The alert is made up of a div container, a message, a close button and can have multiple styles applied to it. If we examine the markup we can see that there are parts of the element that are static, and parts that can be broken down in to options that can be set as parameters. 
+
+![Alert element markup details](./images/markup-details.jpg)
+
+![Alert element broken down in to static markup and options](./images/parameter-breakdown.jpg)
+
+*In addition to the HTML, the alert will require CSS and JavaScript in order to function. The CSS and JavaScript are beyond the scope of this article but are included in the final example at the end of this article.*
  
 ##WRITING A SPECIFICATION
 First step
