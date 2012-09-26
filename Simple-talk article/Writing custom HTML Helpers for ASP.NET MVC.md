@@ -26,8 +26,51 @@ Next we’ll examine the alert markup and see how we can break it down and const
 *In addition to the HTML, the alert will require CSS and JavaScript in order to function. The CSS and JavaScript are beyond the scope of this article but are included in the final example at the end of this article.*
  
 ##WRITING A SPECIFICATION
-First step
-Drafting the syntax
+
+Once I have my HTML defined I prefer to start writing a specification. Writing specification isn’t a necessary step for creating a custom HTML helper, but it gives me a guide to how the HTML helper will function and what the desired syntax will be. A spec will promote the use of semantic code which improves discoverability for others that may be using the helper.
+
+Using a text file I spec out how the helper will function and since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements parameters, we’ll allow HTML attributes to be passed to the helper as well.  Each configuration of the Alert helper is written out in the spec so it can be followed during implementation.
+
+AlertHelperSpec.html
+
+    //Given the Alert HTML Helper method
+    
+    //Then Render the HTML
+    
+    //Default Alert
+    @Html.Alert(text:"message") [.HideCloseButton()]
+    
+    <div class="alert-box">
+    	Message
+    	<a href="" class="close">×</a>
+    </div>
+    
+    //Success Alert
+    
+    @Html.Alert(text:"message", style:AlertStyle.Success [,hideCloseButton:false ,htmlAttributes:object])
+    
+    <div class="alert-box success">
+    	Message
+    	<a href="" class="close">×</a>
+    </div>
+    
+    //Warning Alert
+    
+    @Html.Alert(text:"message", style:AlertStyle.Warning [,hideCloseButton:false ,htmlAttributes:object])
+    
+    <div class="alert-box warning">
+    	Message
+    	<a href="" class="close">×</a>
+    </div>
+    
+    //Info Alert
+    
+    @Html.Alert(text:"message", style:AlertStyle.Info [,hideCloseButton:false ,htmlAttributes:object])
+    
+    <div class="alert-box info">
+    	Message
+    	<a href="" class="close">×</a>
+    </div>
 
 ##UNIT TESTING
 HtmlHelperFactory
