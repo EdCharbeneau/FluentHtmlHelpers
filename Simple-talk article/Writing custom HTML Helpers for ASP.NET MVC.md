@@ -73,9 +73,37 @@ AlertHelperSpec.html
     </div>
 
 ##UNIT TESTING
+
+ASP.NET MVC is highly regarded for its ability to be unit tested and custom HTML helpers can be thoroughly tested too. With the right setup unit testing your custom helper isn’t difficult. First we need to create an instance of the HtmlHelper class so our extension method can be tested, next the custom method is called and we check the results against our expectations.
+
+Before we can write our test, we will need to create an instance of the HtmlHelper class. The HtmlHelper class has no default constructor, so a little work must be done to get an instance. To create an instance of HtmlHelper we must specify a context and view data container, for the scope of this article fakes will do just fine. Since each test will require an instance of HtmlHelper I’ve created an HtmlHelperFactory class to create the instances.
+
 HtmlHelperFactory
 
-Checking the output
+Now that the HtmlHelperFactory is available getting an instance of HtmlHelper is as simple as calling HtmlHelperFactory.Create().
+
+Using the first spec I’ll create a unit test for the default alert. In this test, the Alert method will be called and should return the HTML markup we defined, the message specified, with no additional style and a visible close button. 
+
+First we arrange our expected output and create an instance of HtmlHelper.
+
+    //Spec
+    //Should render an default alert box
+    //@Html.Alert(text:"message")
+    //arrange
+    string htmlAlert = @"<div class=""alert-box"">message<a class=""close"" href="""">×</a></div>";
+    var html = HtmlHelperFactory.Create();
+
+At this point, the method has not been defined yet, so we’ll use what has been defined in the spec.
+
+    //act
+    var result = html.Alert("message").ToHtmlString();
+Finally we check our results with the expected output using Assert.AreEqual.
+
+    //assert
+    Assert.AreEqual(htmlAlert, result, ignoreCase: true);
+
+The first unit test is written, but before it can be put to use the Alert method must be created. This test first approach ensures that the custom Helper we write gives us the result we defined as HTML in our spec. As each spec is fulfilled this process will be repeated until all the specs are completed.
+
 
 ##BASIC IMPLEMENTATION
 HtmlHelper extension method
