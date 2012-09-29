@@ -106,13 +106,153 @@ The first unit test is written, but before it can be put to use the Alert method
 
 
 ##BASIC IMPLEMENTATION
-HtmlHelper extension method
+Before creating our implementation there are a few things we should know about MVC and the HtmlHelper class. The HtmlHelper class provides methods that help you create HTML controls programmatically. All HtmlHelper methods generate HTML and return the result as a string.
 
-Alert constructor
+We’ll begin by creating a new class and implementing the IHtmlString interface. The IHtmlString interface provides the ToHtmlString method which is used by MVC to render the control to the view. Next we override the ToString method of our class. The ToString method and ToHtmlString will return the same result; this is common practice for HtmlHelpers.
 
-Advanced options
+    public class AlertBox : IHtmlString
+    {
+        private readonly string text;
 
-Attributes merge
+        public AlertBox(string text)
+        {
+            this.html = html;
+            this.text = text;
+        }
+
+        //Render HTML
+        public override string ToString()
+        {
+            return "";
+        }
+
+        //Return ToString
+        public string ToHtmlString()
+        {
+            return ToString();
+        }
+    }
+
+Now that we have an HtmlHelper class, we need to be able to call it from MVC. We’ll do this by writing an extension method that returns our custom HtmlHelper class.
+
+    /// <summary>
+    /// Generates an Alert message
+    /// </summary>
+    public static class AlertHtmlHelper
+    {
+        public static AlertBox Alert(this HtmlHelper html, string text)
+        {
+            return new AlertBox(text);
+        }
+    }
+
+At this point a complete scaffold of our code is complete and our unit test should execute but fail to pass.
+
+To finish our basic implementation and pass the unit test we’ll need to set up our parameters and render the HTML. MVC provides the TagBuilder class for building HTML, we’ll use this to build our render method.
+
+        private string RenderAlert()
+        {
+
+            var wrapper = new TagBuilder("div");
+            wrapper.AddCssClass("alert-box");
+
+            var closeButton = new TagBuilder("a");
+            closeButton.AddCssClass("close");
+            closeButton.Attributes.Add("href", "");
+            closeButton.InnerHtml = "×";
+
+            wrapper.InnerHtml = text;
+            wrapper.InnerHtml += closeButton.ToString();
+
+            return wrapper.ToString();
+        }
+
+        //Render HTML
+        public override string ToString()
+        {
+           return RenderAlert();
+        }
+
+The HTML helper should pass the unit test.
+
+With the basic implementation complete, we can easily expand on the HTML helper by adding additional options. Following our spec we’ll add the option to change the style of the alert. Again we start with a unit test and then modify our code to complete the test.
+
+    [TestMethod]
+    public void ShouldCreateSuccessAlert()
+    {
+	    //Spec 
+	    //Should render a Success alert box
+	    //@Html.Alert(text:"message", style:AlertStyle.Success)
+	    //arrange
+	    string htmlAlert = @"<div class=""alert-box success"">message<a class=""close"" href="""">×</a></div>";
+	    var html = HtmlHelperFactory.Create();
+	
+	    //act
+	    var result = html.Alert("message", AlertStyle.Success).ToHtmlString();
+	
+	    //assert
+	    Assert.AreEqual(htmlAlert, result, ignoreCase: true);
+    }
+
+
+
+    public class AlertBox : IHtmlString
+    {
+
+    private readonly string text;
+
+    private readonly AlertStyle alertStyle;
+ 
+    private readonly bool hideCloseButton;
+
+    public AlertBox(HtmlHelper html, string text, AlertStyle style, bool hideCloseButton)
+         {
+            this.html = html;
+            this.text = text;
+            this.alertStyle = style;
+            this.hideCloseButton = hideCloseButton;
+         }
+ 
+		private string RenderAlert()
+        {
+            if (alertStyle != AlertStyle.Default)
+                wrapper.AddCssClass(alertStyle.ToString().ToLower());
+            wrapper.AddCssClass("alert-box");
+ 
+            //build html
+            wrapper.InnerHtml = text;
+            
+            //Add close button
+            if (!hideCloseButton)
+                wrapper.InnerHtml += RenderCloseButton();
+            
+            return wrapper.ToString();
+        }
+
+        private static TagBuilder RenderCloseButton()
+        {
+             //<a href="" class="close">x</a>
+             var closeButton = new TagBuilder("a");
+             closeButton.AddCssClass("close");
+             closeButton.Attributes.Add("href", "");
+             closeButton.InnerHtml = "×";
+             return closeButton;
+        }
+    }
+
+Finally we’ll make our helper more flexible by giving the end user the ability to define additional HTML attributes. The TagBuilder’s MergeAttributes method adds a specified attribute to the tag being rendered. In addition to the MetgeAttributes method the HtmlHelper AnonymousObjectToHtmlAttributes is used to allow an anonymous object to be used to define additional parameters.
+
+    public class AlertBox : IHtmlString
+    {...
+    	private object htmlAttributes;
+	
+	    public AlertBox(string text, AlertStyle style, bool hideCloseButton = false, object htmlAttributes = null)
+	
+	    private string RenderAlert()
+	    { ...
+	    	wrapper.MergeAttributes(htmlAttributes != null ? HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes) : null);
+	    ...}
+    }
 
 ##FLUENT CONFIGURATION
 
