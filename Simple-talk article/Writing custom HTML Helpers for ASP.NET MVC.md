@@ -3,21 +3,21 @@
 
 ##TRANSITIONING FROM WEB FORMS
 
-As a web forms developer I found the transition to MVC was a bit of a shock at first. Without fully understanding the nature of MVC I found the lack of a Toolbox filled with server controls confusing. However once it became clear that the goal of MVC was to expose HTML markup and give developers full control over what is rendered to the browser I quickly embraced the idea.
+As a web forms developer, I found the transition to MVC to be a bit of a shock at first. Without fully understanding the nature of MVC, I found the lack of a Toolbox filled with server controls to be confusing. However, once it became clear that the goal of MVC was to expose HTML markup and give developers full control over what is rendered to the browser, I quickly embraced the idea.
 
-In MVC development, HTML helpers replace the server control, but the similarities aren’t exactly parallel. Web form’s and server controls were intended to bring the workflow of desktop forms to the web. In MVC HTML helpers provide a shortcut to writing out raw HTML elements that are frequently used.
+In MVC development, HTML helpers replace the server control, but the similarities aren’t exactly parallel. Whereas web forms and server controls were intended to bring the workflow of desktop forms to the web, MVC's HTML helpers simply provide a shortcut to writing out raw HTML elements that are frequently used.
 
-The HTML helper, in most cases, is a method that returns a string. When called in a View using the razor syntax @Html, we are accessing the Html property of the View which is an instance of the HtmlHelper class.
+The HTML helper, in most cases, is a method that returns a string. When we call a helper in a View using the razor syntax **@Html**, we are accessing the Html property of the View, which is an instance of the HtmlHelper class.
 
-Writing extensions for the HtmlHelper class will allow us to create our own custom helpers to encapsulate complex HTML markup. Custom helpers promote the use of reusable code and are unit testable. Custom helpers can be configured by passing values to the constructor, via fluent configuration, strongly typed or a combination of and ultimately return a string. 
+Writing extensions for the **HtmlHelper** class will allow us to create our own custom helpers to encapsulate complex HTML markup. Custom helpers also promote the use of reusable code and are unit testable. Custom helpers can be configured by passing values to the constructor, via fluent configuration, strongly typing, or a combination of both, and ultimately return a string. 
 
 ##HOW TO BEGIN
 
-The first step in writing an HTML helper is finding code within our project that we intend on reusing. For the extent of this article I will be using an Alert message as an example. The alert is a UI element that displays a message and has a default, success, warning, or information style. The alert element’s markup is simple in construction but gives us an adequate sample for the scope of this article.
+The first step in writing an HTML helper is finding code within our project that you intend on reusing. For the extent of this article I will be using an **Alert** message as an example. The alert is a UI element that displays a message which has a default, success, warning, or information style. The alert element’s markup is simple in construction but gives us an adequate sample for the scope of this article.
 
 ![This is how the alert element looks in the browser.](./images/Alert-box.jpg)
 
-Next we’ll examine the alert markup and see how we can break it down and construct reusable piece of content. The alert is made up of a div container, a message, a close button and can have multiple styles applied to it. If we examine the markup we can see that there are parts of the element that are static, and parts that can be broken down in to options that can be set as parameters. 
+With our code targeted, we’ll examine the alert markup and see how we can break it down and construct reusable pieces of content. The alert is made up of a div container, a message, a close button and can have multiple styles applied to it. If we examine the markup, we can see that there are parts of the element that are static, and parts that can be broken down into options that can be set as parameters. 
 
 ![Alert element markup details](./images/markup-details.jpg)
 
@@ -27,9 +27,9 @@ Next we’ll examine the alert markup and see how we can break it down and const
  
 ##WRITING A SPECIFICATION
 
-Once I have my HTML defined I prefer to start writing a specification. Writing specification isn’t a necessary step for creating a custom HTML helper, but it gives me a guide to how the HTML helper will function and what the desired syntax will be. A spec will promote the use of semantic code which improves discoverability for others that may be using the helper.
+Personally, once I have my HTML defined, I prefer to start writing a specification before I do anything else. Writing a specification isn’t a necessary step for creating a custom HTML helper, but it gives me a guide to how the HTML helper will function and what the desired syntax will be. A spec will also promote the use of semantic code, which improves discoverability for others that may be using the helper.
 
-Using a text file I spec out how the helper will function and since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements parameters, we’ll allow HTML attributes to be passed to the helper as well.  Each configuration of the Alert helper is written out in the spec so it can be followed during implementation.
+Using a text file, I spec out how the helper will function and, since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements parameters, we’ll allow HTML attributes to be passed to the helper as well. Each configuration of the **Alert** helper is written out in the spec so it can be followed during implementation.
 
 AlertHelperSpec.html
 
@@ -74,17 +74,19 @@ AlertHelperSpec.html
 
 ##UNIT TESTING
 
-ASP.NET MVC is highly regarded for its ability to be unit tested and custom HTML helpers can be thoroughly tested too. With the right setup unit testing your custom helper isn’t difficult. First we need to create an instance of the HtmlHelper class so our extension method can be tested, next the custom method is called and we check the results against our expectations.
+ASP.NET MVC is highly regarded for its ability to be unit tested, and custom HTML helpers can be thoroughly tested too. With the right setup, unit testing your custom helper isn’t difficult: 
 
-Before we can write our test, we will need to create an instance of the HtmlHelper class. The HtmlHelper class has no default constructor, so a little work must be done to get an instance. To create an instance of HtmlHelper we must specify a context and view data container, for the scope of this article fakes will do just fine. Since each test will require an instance of HtmlHelper I’ve created an HtmlHelperFactory class to create the instances.
+First, we need to create an instance of the HtmlHelper class so our extension method can be tested. Next, the custom method is called, and finally we can check the results against our expectations.
 
-HtmlHelperFactory
+So, before we can write our test, we will need to create an instance of the HtmlHelper class. However, the HtmlHelper class has no default constructor, so a little work must be done up front to get an instance. To create an instance of HtmlHelper, we must specify a context and view data container - for the scope of this article, fakes will do just fine. Since each test will require an instance of HtmlHelper, I’ve created an HtmlHelperFactory class to create the instances.
 
-Now that the HtmlHelperFactory is available getting an instance of HtmlHelper is as simple as calling HtmlHelperFactory.Create().
+###HtmlHelperFactory
 
-Using the first spec I’ll create a unit test for the default alert. In this test, the Alert method will be called and should return the HTML markup we defined, the message specified, with no additional style and a visible close button. 
+Now that the HtmlHelperFactory is available, getting an instance of HtmlHelper is as simple as calling **HtmlHelperFactory.Create()**.
 
-First we arrange our expected output and create an instance of HtmlHelper.
+Using the first spec, I’ll create a unit test for the default alert. In this test, the **Alert** method will be called, and should return the HTML markup we defined, the message specified, with no additional style, and a visible close button. 
+
+First, we arrange our expected output and create an instance of HtmlHelper:
 
     //Spec
     //Should render an default alert box
@@ -93,16 +95,17 @@ First we arrange our expected output and create an instance of HtmlHelper.
     string htmlAlert = @"<div class=""alert-box"">message<a class=""close"" href="""">×</a></div>";
     var html = HtmlHelperFactory.Create();
 
-At this point, the method has not been defined yet, so we’ll use what has been defined in the spec.
+At this point, the method has not been defined yet, so we’ll use what has been defined in the spec to guide us:
 
     //act
     var result = html.Alert("message").ToHtmlString();
-Finally we check our results with the expected output using Assert.AreEqual.
+
+Finally, we check our results with the expected output using **Assert.AreEqual**:
 
     //assert
     Assert.AreEqual(htmlAlert, result, ignoreCase: true);
 
-The first unit test is written, but before it can be put to use the Alert method must be created. This test first approach ensures that the custom Helper we write gives us the result we defined as HTML in our spec. As each spec is fulfilled this process will be repeated until all the specs are completed.
+So now the first unit test is written, but before it can be put to use the **Alert** method must be created. This test-first approach ensures that the custom Helper we write gives us the result we defined as HTML in our spec and, as each spec is fulfilled, this process will be repeated until all the specs are completed and satisfied.
 
 
 ##BASIC IMPLEMENTATION
