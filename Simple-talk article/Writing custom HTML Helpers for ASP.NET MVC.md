@@ -29,7 +29,7 @@ With our code targeted, we’ll examine the alert markup and see how we can brea
 
 Personally, once I have my HTML defined, I prefer to start writing a specification before I do anything else. Writing a specification isn’t a necessary step for creating a custom HTML helper, but it gives me a guide to how the HTML helper will function and what the desired syntax will be. A spec will also promote the use of semantic code, which improves discoverability for others that may be using the helper.
 
-Using a text file, I spec out how the helper will function and, since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements parameters, we’ll allow HTML attributes to be passed to the helper as well. Each configuration of the **Alert** helper is written out in the spec so it can be followed during implementation.
+Using a text file, I spec out how the helper will function and, since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements parameters, we’ll allow HTML attributes to be passed to the helper as well (which I'll return to once we have our basic implementation up and running). Each configuration of the **Alert** helper is written out in the spec so it can be followed during implementation.
 
 AlertHelperSpec.html
 
@@ -76,13 +76,13 @@ AlertHelperSpec.html
 
 ASP.NET MVC is highly regarded for its ability to be unit tested, and custom HTML helpers can be thoroughly tested too. With the right setup, unit testing your custom helper isn’t difficult: 
 
-First, we need to create an instance of the HtmlHelper class so our extension method can be tested. Next, the custom method is called, and finally we can check the results against our expectations.
+First, we need to create an instance of the **HtmlHelper** class so our extension method can be tested. Next, the custom method is called, and finally we can check the results against our expectations.
 
-So, before we can write our test, we will need to create an instance of the HtmlHelper class. However, the HtmlHelper class has no default constructor, so a little work must be done up front to get an instance. To create an instance of HtmlHelper, we must specify a context and view data container - for the scope of this article, fakes will do just fine. Since each test will require an instance of HtmlHelper, I’ve created an HtmlHelperFactory class to create the instances.
+So, before we can write our test, we will need to create an instance of the **HtmlHelper** class. However, the **HtmlHelper** class has no default constructor, so a little work must be done up front to get an instance. To create an instance of **HtmlHelper**, we must specify a context and view data container - for the scope of this article, fakes will do just fine. Since each test will require an instance of **HtmlHelper**, I’ve created an **HtmlHelperFactory** class to create the instances.
 
 ###HtmlHelperFactory
 
-Now that the HtmlHelperFactory is available, getting an instance of HtmlHelper is as simple as calling **HtmlHelperFactory.Create()**.
+Now that the **HtmlHelperFactory** is available, getting an instance of HtmlHelper is as simple as calling **HtmlHelperFactory.Create()**.
 
 Using the first spec, I’ll create a unit test for the default alert. In this test, the **Alert** method will be called, and should return the HTML markup we defined, the message specified, with no additional style, and a visible close button. 
 
@@ -109,9 +109,10 @@ So now the first unit test is written, but before it can be put to use the **Ale
 
 
 ##BASIC IMPLEMENTATION
-Before creating our implementation there are a few things we should know about MVC and the HtmlHelper class. The HtmlHelper class provides methods that help you create HTML controls programmatically. All HtmlHelper methods generate HTML and return the result as a string.
 
-We’ll begin by creating a new class and implementing the IHtmlString interface. The IHtmlString interface provides the ToHtmlString method which is used by MVC to render the control to the view. Next we override the ToString method of our class. The ToString method and ToHtmlString will return the same result; this is common practice for HtmlHelpers.
+Before creating our implementation, there are a few things we should know about MVC and the **HtmlHelper** class. The **HtmlHelper** class provides methods that help you create HTML controls programmatically; all **HtmlHelper** methods generate HTML and return the result as a string.
+
+We’ll begin by creating a new class and implementing the **IHtmlString** interface - this provides the **ToHtmlString** method, which is used by MVC to render the control to the View. Next we override the **ToString** method of our class; the **ToString** and **ToHtmlString** methods will return the same result, which is a common practice for **HtmlHelpers**.
 
     public class AlertBox : IHtmlString
     {
@@ -136,7 +137,7 @@ We’ll begin by creating a new class and implementing the IHtmlString interface
         }
     }
 
-Now that we have an HtmlHelper class, we need to be able to call it from MVC. We’ll do this by writing an extension method that returns our custom HtmlHelper class.
+Now that we have an **HtmlHelper** class, we need to be able to call it from MVC. We’ll do this by writing an extension method that returns our custom **HtmlHelper** class:
 
     /// <summary>
     /// Generates an Alert message
@@ -149,9 +150,9 @@ Now that we have an HtmlHelper class, we need to be able to call it from MVC. We
         }
     }
 
-At this point a complete scaffold of our code is complete and our unit test should execute but fail to pass.
+At this point a complete scaffold of our code is complete, and our unit test should execute but fail to pass.
 
-To finish our basic implementation and pass the unit test we’ll need to set up our parameters and render the HTML. MVC provides the TagBuilder class for building HTML, we’ll use this to build our render method.
+To finish our basic implementation and pass the unit test, we’ll need to set up our parameters and render the HTML. MVC provides the **TagBuilder** class for building HTML, which we’ll use to build our render method.
 
         private string RenderAlert()
         {
@@ -176,9 +177,9 @@ To finish our basic implementation and pass the unit test we’ll need to set up
            return RenderAlert();
         }
 
-The HTML helper should pass the unit test.
+The HTML helper should now pass the unit test.
 
-With the basic implementation complete, we can easily expand on the HTML helper by adding additional options. Following our spec we’ll add the option to change the style of the alert. Again we start with a unit test and then modify our code to complete the test.
+With the basic implementation complete, we can easily expand on the HTML helper by adding additional options. Following our spec, we’ll add the option to change the style of the alert. Once again, we start with a unit test and then modify our code to complete the test:
 
     [TestMethod]
     public void ShouldCreateSuccessAlert()
@@ -243,7 +244,7 @@ With the basic implementation complete, we can easily expand on the HTML helper 
         }
     }
 
-Finally we’ll make our helper more flexible by giving the end user the ability to define additional HTML attributes. The TagBuilder’s MergeAttributes method adds a specified attribute to the tag being rendered. In addition to the MetgeAttributes method the HtmlHelper AnonymousObjectToHtmlAttributes is used to allow an anonymous object to be used to define additional parameters.
+Finally, we’ll make our helper more flexible by giving the end user the ability to define additional HTML attributes. The **TagBuilder**’s **MergeAttributes** method adds a specified attribute to the tag being rendered. In addition to the **MergeAttributes** method, the **HtmlHelper** **AnonymousObjectToHtmlAttributes** is used to allow an anonymous object to be used to define additional parameters:
 
     public class AlertBox : IHtmlString
     {...
