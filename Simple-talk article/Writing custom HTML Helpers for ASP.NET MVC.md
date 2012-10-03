@@ -258,11 +258,54 @@ Finally, we’ll make our helper more flexible by giving the end user the abilit
 	    ...}
     }
 
+The basic implementation is now complete and the custom helper can be referernced and called in any ASP.NET MVC project. Using the synax outlined in the spec an Alert can easily be placed anywhere in our project.
+
+     @Html.Alert("Message")
+
 ##FLUENT CONFIGURATION
 
-Appending the spec
+Next, we'll build upon the basic HTML helper we have created thus far. Our next goal will be to add a fluent API configuration to our existing Alert helper. The fluent API won't add functionality to the helper, instead we will be simplifying the syntax used for setting options on our helper; some refer to this as adding syntactic sugar.
+Taking a look at the basic implementation of the Alert helper we can see there are several options that can be set when calling the Alert helper.
 
-Method chaining with interfaces
+     @Html.Alert(text, alertStyle [Default | Success | Warning | Info], hideCloseButton, htmlAttributes)
+
+Instead of using the constructor as the only method of setting options on our helper let’s guide the user of our helper through the options. In addition to making options simpler to set, we will also be making our code easier to read. The end result should be a syntax which resembles the spoken intent of its use. 
+
+    @Html.Alert(text).Success().HideCloseButton()
+    “Alert success, hide the close button”
+
+Designing a fluent API requires some planning; again I prefer to write a specification of how I intend the code to function. Using the specification from earlier I’ll plan out the code and show the intended results. 
+
+	//Success Alert
+	
+	@Html.Alert(text:"message", style:AlertStyle.Success [,hideCloseButton:false ,htmlAttributes:object])
+	@Html.Alert(text:"message").Success() [.HideCloseButton().Attributes(object)] //Fluent
+	
+	<div class="alert-box success">
+	    Message
+	  					<a href="" class="close">×</a>
+	</div>
+	
+For the Alert helper we’ll be eliminating the need to specify the alert style as an enumerator and instead just call a method that defines the style by name. In this example we’ll use interfaces to chain our methods together so the user is guided through the options. In addition to guiding the user, we can control what options are available as well, for example when the style is set only the HideCloseButton and Attributes methods will be available.
+
+To create the API we’ll need to define an interface for setting the style and a second interface for setting the remaining options. Our Alert helper will implement both interfaces.
+
+    public interface IAlertBox : IAlertBoxFluentOptions
+    {
+        IAlertBoxFluentOptions Success();
+        IAlertBoxFluentOptions Warning();
+        IAlertBoxFluentOptions Info();
+    }
+
+    public interface IAlertBoxFluentOptions : IHtmlString
+    {
+        IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true);
+        IAlertBoxFluentOptions Attributes(object htmlAttributes);
+    }
+
+![Setting the style](./images/fluent-api-set-style.jpg)
+
+![Setting the options, styles are no loger an option](./images/fluent-api-set-attributes.jpg)
 
 More testing
 
