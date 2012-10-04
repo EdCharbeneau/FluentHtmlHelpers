@@ -400,6 +400,7 @@ The fluent API is now complete and ready to be used.
 ![Intellasense shows us the available options for setting the style](./images/fluent-api-set-style.jpg)
 
 ![Setting the options, styles are no longer an option](./images/fluent-api-set-attributes.jpg)
+
 The code required for creating a fluent API may seem unnecessary or overly complex for this example, however more complex HTML Helpers could greatly benefit from this type of API. Complexity, frequency of use and the type of end user your HTML Helper is being designed for are all considerations when for including a fluent API for your project.
 
 ##STRONGLY TYPED HELPERS
