@@ -264,31 +264,32 @@ The basic implementation is now complete and the custom helper can be referernce
 
 ##FLUENT CONFIGURATION
 
-Next, we'll build upon the basic HTML helper we have created thus far. Our next goal will be to add a fluent API configuration to our existing Alert helper. The fluent API won't add functionality to the helper, instead we will be simplifying the syntax used for setting options on our helper; some refer to this as adding syntactic sugar.
+Next, we'll build upon the basic HTML helper we have created thus far. Our goal will be to add a fluent API configuration to our existing Alert helper. The fluent API won't add functionality to the helper, instead we will be simplifying the syntax used for setting options on our helper; some refer to this as adding syntactic sugar.
+
 Taking a look at the basic implementation of the Alert helper we can see there are several options that can be set when calling the Alert helper.
 
      @Html.Alert(text, alertStyle [Default | Success | Warning | Info], hideCloseButton, htmlAttributes)
 
-Instead of using the constructor as the only method of setting options on our helper let’s guide the user of our helper through the options. In addition to making options simpler to set, we will also be making our code easier to read. The end result should be a syntax which resembles the spoken intent of its use. 
+Instead of using the constructor as the only manner of setting options on our helper we will guide the user of our helper through the options. In addition to making options simpler to set, we will also be making our code easier to read. The end result should be a syntax which resembles the spoken intent of its use. 
 
     @Html.Alert(text).Success().HideCloseButton()
     “Alert success, hide the close button”
 
-Designing a fluent API requires some planning; again I prefer to write a specification of how I intend the code to function. Using the specification from earlier I’ll plan out the code and show the intended results. 
+Designing a fluent API requires some planning; again I prefer to write a specification of how I intend the code to function. Using the specification from earlier I’ll plan out the code and show the expected results. 
 
-	//Success Alert
-	
-	@Html.Alert(text:"message", style:AlertStyle.Success [,hideCloseButton:false ,htmlAttributes:object])
-	@Html.Alert(text:"message").Success() [.HideCloseButton().Attributes(object)] //Fluent
-	
-	<div class="alert-box success">
-	    Message
-	  					<a href="" class="close">×</a>
-	</div>
-	
+    //Success Alert
+    @Html.Alert(text:"message").Success() [.HideCloseButton().Attributes(object)] //Fluent
+    
+    <div class="alert-box success">
+        Message
+                          <a href="" class="close">×</a>
+    </div>
+    
 For the Alert helper we’ll be eliminating the need to specify the alert style as an enumerator and instead just call a method that defines the style by name. In this example we’ll use interfaces to chain our methods together so the user is guided through the options. In addition to guiding the user, we can control what options are available as well, for example when the style is set only the HideCloseButton and Attributes methods will be available.
 
 To create the API we’ll need to define an interface for setting the style and a second interface for setting the remaining options. Our Alert helper will implement both interfaces.
+
+The IAlertBox interface outlines three method signatures, Success, Warning, and Info. These methods will return the IAlertBoxFluentOptions interface. We will use these methods to set our alert style.
 
     public interface IAlertBox : IAlertBoxFluentOptions
     {
@@ -297,17 +298,109 @@ To create the API we’ll need to define an interface for setting the style and 
         IAlertBoxFluentOptions Info();
     }
 
+The IAlertBoxFluentOptions interface outlines the rest of the options for the Alert. The method signatures HideCloseButton and Attributes also return IAlertBoxFluentOptions, this will prevent the style option from being set again.
+
     public interface IAlertBoxFluentOptions : IHtmlString
     {
         IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true);
         IAlertBoxFluentOptions Attributes(object htmlAttributes);
     }
 
-![Setting the style](./images/fluent-api-set-style.jpg)
+Now that we have defined our interfaces, we will need to create a class which implements IAlertBoxFluentOptions. Because the class will be returned at the end of the method call, it will also be responsible for rendering HTML and should function as an HTML Helper which implements the IHtmlString interface.
 
-![Setting the options, styles are no loger an option](./images/fluent-api-set-attributes.jpg)
+    public class AlertBoxFluentOptions : IHtmlString, IAlertBoxFluentOptions
+    {
+        private readonly AlertBox parent;
 
-More testing
+        public AlertBoxFluentOptions(AlertBox parent)
+        {
+            this.parent = parent;
+        }
+
+        public IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true)
+        {
+            return parent.HideCloseButton(hideCloseButton);
+        }
+
+        public IAlertBoxFluentOptions Attributes(object htmlAttributes)
+        {
+            return parent.Attributes(htmlAttributes);
+        }
+
+        public override string ToString()
+        {
+            return parent.ToString();
+        }
+
+        public string ToHtmlString()
+        {
+            return ToString();
+        }
+    }
+
+The AlertBoxFluentHelpler class is essentially extending the functionality of the AlertBox class. The AlertBoxFluentHelper needs to be able to call back to the AlertBox we began building and set properties and call the render method, to accomplish these task we will pass an instance of AlerBox in the constructor of the AlertFluentHelper. Using the AlertBox referenced as “parent”, we can call the parent’s ToString and ToHtmlString methods and return the results.
+
+To complete the fluent API we need to implement both IAlertBox and IAlertBoxFluentHelperOptions in the AlertBox class. Each method will be responsible for setting the desired value and returns a new AlertBoxFluentOptions object passing itself to the constructor.
+
+		#region FluentAPI
+
+        /// <summary>
+        /// Sets the display style to Success
+        /// </summary>
+        public IAlertBoxFluentOptions Success()
+        {
+            alertStyle = AlertStyle.Success;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        /// <summary>
+        /// Sets the display style to Warning
+        /// </summary>
+        /// <returns></returns>
+        public IAlertBoxFluentOptions Warning()
+        {
+            alertStyle = AlertStyle.Warning;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        /// <summary>
+        /// Sets the display style to Info
+        /// </summary>
+        /// <returns></returns>
+        public IAlertBoxFluentOptions Info()
+        {
+            alertStyle = AlertStyle.Info;
+            return new AlertBoxFluentOptions(this);
+        }
+        
+        /// <summary>
+        /// Sets the close button visibility
+        /// </summary>
+        /// <returns></returns>
+        public IAlertBoxFluentOptions HideCloseButton(bool hideCloseButton = true)
+        {
+            this.hideCloseButton = hideCloseButton;
+            return new AlertBoxFluentOptions(this);
+        }
+
+        /// <summary>
+        /// An object that contains the HTML attributes to set for the element.
+        /// </summary>
+        /// <param name="htmlAttributes"></param>
+        /// <returns></returns>
+        public IAlertBoxFluentOptions Attributes(object htmlAttributes)
+        {
+            this.htmlAttributes = htmlAttributes;
+            return new AlertBoxFluentOptions(this);
+        }
+        #endregion //FluentAPI
+
+The fluent API is now complete and ready to be used.
+
+![Intellasense shows us the available options for setting the style](./images/fluent-api-set-style.jpg)
+
+![Setting the options, styles are no longer an option](./images/fluent-api-set-attributes.jpg)
+The code required for creating a fluent API may seem unnecessary or overly complex for this example, however more complex HTML Helpers could greatly benefit from this type of API. Complexity, frequency of use and the type of end user your HTML Helper is being designed for are all considerations when for including a fluent API for your project.
 
 ##STRONGLY TYPED HELPERS
 
