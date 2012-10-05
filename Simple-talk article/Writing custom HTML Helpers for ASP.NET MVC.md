@@ -405,17 +405,31 @@ The code required for creating a fluent API may seem unnecessary or overly compl
 
 ##STRONGLY TYPED HELPERS
 
-Appending the spec again
+Finally we’ll complete our overview of custom HTML Helpers by learning about strongly typed HTML Helpers. If you are already familiar with MVC you have probably seen or used strongly typed HTML Helpers. These helpers use the ElementFor convention, meaning the helper has a For suffix indicating it is strongly typed.
+To create a strongly typed helper we need to understand what makes them different from regular HTML Helpers. Strongly typed helpers are used to pass data from the Model to the Helper using expression syntax. HtmlHelper<TModel> class is a strongly typed subclass of the HtmlHelper class. 
 
-HtmlHelper extension methods again
+In addition to HtmlHelper<TModel> we will be using Expression<Func<T,T>> to collect information about the Model. Expression<Func<T,T>>, part of LINQ, represents an expression tree of a delegate which accepts a parameter and returns a result. When writing HTML Helpers the expression will allow the Helper to accept lambda expressions as parameters. All of the hard work of extracting data from the Model via lambda expression has been done for us in MVC; the method ModelMetadata.FromLambdaExpression will return the Model data based on the expression.
 
-The ElementFor convention
+Since we already have the basic Alert Html Helper built, we only need to create additional extension methods and allow them to call the Alert helper.
 
-`<TModel>`
+        public static AlertBox AlertFor<TModel, TTextProperty, TStyleProperty>(this HtmlHelper<TModel> html,
+            Expression<Func<TModel, TTextProperty>> textExpression,
+            Expression<Func<TModel, TStyleProperty>> styleExpression,
+            bool hideCloseButton = false,
+            object htmlAttributes = null
+            )
+        {
+            var text = (string)ModelMetadata.FromLambdaExpression(textExpression, html.ViewData).Model;
+            var alertStyle = (AlertStyle)ModelMetadata.FromLambdaExpression(styleExpression, html.ViewData).Model;
 
-`Expression<Func<T,T>>`
+            return new AlertBox(text, alertStyle, hideCloseButton, htmlAttributes);
+        }
 
-Model Metadata
+Usage:
+
+    @Html.AlertFor(m => m.AlertBoxText, m => m.AlertBoxStyle)
+
+The strongly typed HTML Helpers provide better compile time suport and benefit from intellisense. Adding this option to your HTML Helper extends its usefulness and gives the end user more flexibility.
 
 ##FINAL RESULTS
 Basic
