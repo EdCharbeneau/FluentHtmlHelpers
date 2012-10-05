@@ -1,0 +1,13 @@
+﻿@using MyHelpers
+@model FluentHtmlHelpers.Models.SampleAlertModel
+
+@{
+    ViewBag.Title = "Strongly Typed";
+}
+
+<h2>Strongly Typed</h2>
+<span>Html.AlertFor(m => m.AlertBoxText).Success()</span>
+@Html.AlertFor(m => m.AlertBoxText).Success()
+
+<span>Html.AlertFor(m => m.AlertBoxText, m => m.AlertBoxStyle)</span>
+@Html.AlertFor(m => m.AlertBoxText, m => m.AlertBoxStyle)

@@ -28,19 +28,24 @@
 </div>
 
 <h3>Fluent API</h3>
-
+<span>Html.Alert("Message")</span>
 @Html.Alert("Message")
 
+<span>Html.Alert("Message").Success()</span>
 @Html.Alert("Message").Success()
 
+<span>Html.Alert("Message").Warning()</span>
 @Html.Alert("Message").Warning()
 
+<span>Html.Alert("Message").Info()</span>
 @Html.Alert("Message").Info()
 
+<span>Html.Alert("No close button").Info().HideCloseButton().Attributes(new { data_special = "SpecialAttribute" })</span>
 @Html.Alert("No close button").Info().HideCloseButton().Attributes(new { data_special = "SpecialAttribute" })
 
 <h4>Standard API</h4>
 
+<span>Html.Alert("Another message", hideCloseButton:true)</span>
 @Html.Alert("Another message", hideCloseButton:true)
 
 @section scripts
