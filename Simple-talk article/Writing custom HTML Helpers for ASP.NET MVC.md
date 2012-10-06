@@ -431,19 +431,10 @@ Usage:
 
 The strongly typed HTML Helpers provide better compile time suport and benefit from intellisense. Adding this option to your HTML Helper extends its usefulness and gives the end user more flexibility.
 
-##FINAL RESULTS
-Basic
-
-Fluent
-
-Strongly typed
-
 ##CONSIDERATIONS
 
-When to create a helper
+HTML Helpers are intended to be used to save time by making our code more reusable. When creating HTML Helpers you should consider how often the HTML is going to be used and how the code will be used in a project. Even though HTML Helpers save time, they are an investment. Choosing when to create one and what level of configuration is needed should be decided on a per project basis. 
+If your goal is to simplify a project then a basic HTML Helper will due. If you plan to use the code across multiple projects or create a suite of tools then Fluent APIs and strongly typed variation of your helpers will increase the value to the end user.
+##FINAL RESULTS
+Throughout this article common practices for creating custom HTML Helpers have been identified. HTML Helpers are a powerful tool in MVC used to encapsulate reusable HTML fragments. I’ve used the custom Alert helper to demonstrate how to create a basic implementation, a fluent API configuration and the strongly typed convention. The complete project containing all source code, unit tests and MVC solution can be downloaded from GitHub.
 
-When to use basic, fluent, strongly typed or all.
-
-What’s next, templates, and complex controls
-
-Resources
