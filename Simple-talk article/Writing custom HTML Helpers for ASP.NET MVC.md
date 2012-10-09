@@ -409,7 +409,7 @@ Finally we’ll complete our overview of custom HTML Helpers by learning about s
 
 To create a strongly typed helper we need to understand what makes them different from regular HTML Helpers. Strongly typed helpers are used to pass data from the Model to the helper using expression syntax. The **HtmlHelper<TModel>** class is a strongly typed subclass of the **HtmlHelper** class. 
 
-In addition to **HtmlHelper<TModel>**, we will be using **Expression<Func<T,T>>** to collect information about the Model. **Expression<Func<T,T>>**, which is part of LINQ, represents an expression tree of a delegate which accepts a parameter and returns a result. When writing HTML Helpers, the expression will allow the Helper to accept lambda expressions as parameters. All of the hard work of extracting data from the Model via lambda expression has been done for us in MVC; the **ModelMetadata.FromLambdaExpression** method will return the Model data based on the expression.
+In addition to **`HtmlHelper<TModel>`**, we will be using **`Expression<Func<T,T>>`** to collect information about the Model. **`Expression<Func<T,T>>`**, which is part of LINQ, represents an expression tree of a delegate which accepts a parameter and returns a result. When writing HTML Helpers, the expression will allow the Helper to accept lambda expressions as parameters. All of the hard work of extracting data from the Model via lambda expression has been done for us in MVC; the **`ModelMetadata.FromLambdaExpression`** method will return the Model data based on the expression.
 
 Since we already have the basic **Alert** Html Helper built, we only need to create additional extension methods and allow them to call the **Alert** helper:
 
