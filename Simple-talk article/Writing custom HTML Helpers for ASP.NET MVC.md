@@ -1,9 +1,9 @@
 #WRITING CUSTOM HTML HELPERS FOR ASP.NET MVC 
 *Ed Charbeneau*
 
-##TRANSITIONING FROM WEB FORMS
-
 As a web forms developer, I found the transition to MVC to be a bit of a shock at first. Without fully understanding the nature of MVC, I found the lack of a Toolbox filled with server controls to be confusing. However, once it became clear that the goal of MVC was to expose HTML markup and give developers full control over what is rendered to the browser, I quickly embraced the idea.
+
+##TRANSITIONING FROM WEB FORMS
 
 In MVC development, HTML helpers replace the server control, but the similarities aren’t exactly parallel. Whereas web forms and server controls were intended to bring the workflow of desktop forms to the web, MVC's HTML helpers simply provide a shortcut to writing out raw HTML elements that are frequently used.
 
