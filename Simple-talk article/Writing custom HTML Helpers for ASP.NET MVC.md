@@ -13,7 +13,7 @@ Writing extensions for the **HtmlHelper** class will allow us to create our own 
 
 ##HOW TO BEGIN
 
-The first step in writing an HTML helper is finding code within our project that you intend on reusing. For the extent of this article I will be using an **Alert** message as an example. The alert is a UI element that displays a message which has a default, success, warning, or information style. The alert element’s markup is simple in construction but gives us an adequate sample for the scope of this article.
+The first step in writing an HTML helper is finding code within our project that you intend on reusing. For the extent of this article I will be using an alert message as an example. The Alert is a UI element that displays a message which has a default, success, warning, or information style. The Alert element’s markup is simple in construction but gives us an adequate sample for the scope of this article.
 
 ![This is how the alert element looks in the browser.](./images/Alert-box.jpg)
 
@@ -152,7 +152,7 @@ Now that we have an **HtmlHelper** class, we need to be able to call it from MVC
 
 At this point a complete scaffold of our code is complete, and our unit test should execute but fail to pass.
 
-To finish our basic implementation and pass the unit test, we’ll need to set up our parameters and render the HTML. MVC provides the **TagBuilder** class for building HTML, which we’ll use to build our render method.
+To finish our basic implementation and pass the unit test, we’ll need to set up our parameters and render the HTML. MVC provides the **TagBuilder** class for building HTML, which we’ll use to build our render method:
 
         private string RenderAlert()
         {
@@ -179,7 +179,7 @@ To finish our basic implementation and pass the unit test, we’ll need to set u
 
 The HTML helper should now pass the unit test.
 
-With the basic implementation complete, we can easily expand on the HTML helper by adding additional options. Following our spec, we’ll add the option to change the style of the alert. Once again, we start with a unit test and then modify our code to complete the test:
+With the basic implementation complete, we can easily expand on the HTML helper by adding additional options. Following our spec, we’ll add the option to change the style of the alert; once again, we start with a unit test and then modify our code to complete the test:
 
     [TestMethod]
     public void ShouldCreateSuccessAlert()
@@ -258,24 +258,24 @@ Finally, we’ll make our helper more flexible by giving the end user the abilit
 	    ...}
     }
 
-The basic implementation is now complete and the custom helper can be referernced and called in any ASP.NET MVC project. Using the synax outlined in the spec an Alert can easily be placed anywhere in our project.
+The basic implementation is now complete, and the custom helper can be referernced and called in any ASP.NET MVC project. Using the synax outlined in the spec, an Alert can easily be placed anywhere in our project:
 
      @Html.Alert("Message")
 
 ##FLUENT CONFIGURATION
 
-Next, we'll build upon the basic HTML helper we have created thus far. Our goal will be to add a fluent API configuration to our existing Alert helper. The fluent API won't add functionality to the helper, instead we will be simplifying the syntax used for setting options on our helper; some refer to this as adding syntactic sugar.
+Next, we'll build upon the basic HTML helper we have created thus far, with the goal of adding a Fluent API configuration to our existing **Alert** helper. The Fluent API won't add functionality to the helper - instead we will be simplifying the syntax used for setting options on our helper; some refer to this as adding syntactic sugar.
 
-Taking a look at the basic implementation of the Alert helper we can see there are several options that can be set when calling the Alert helper.
+Taking a look at the basic implementation of the **Alert** helper, we can see that there are several options that can be set when calling the **Alert** helper:
 
      @Html.Alert(text, alertStyle [Default | Success | Warning | Info], hideCloseButton, htmlAttributes)
 
-Instead of using the constructor as the only manner of setting options on our helper we will guide the user of our helper through the options. In addition to making options simpler to set, we will also be making our code easier to read. The end result should be a syntax which resembles the spoken intent of its use. 
+Instead of using the constructor as the only manner of setting options on our helper, we will guide the user of our helper through the options. In addition to making options simpler to set, we will also be making our code easier to read. The end result *should* be a syntax which resembles the spoken intent of its use:
 
     @Html.Alert(text).Success().HideCloseButton()
     “Alert success, hide the close button”
 
-Designing a fluent API requires some planning; again I prefer to write a specification of how I intend the code to function. Using the specification from earlier I’ll plan out the code and show the expected results. 
+Designing a Fluent API requires some planning; again, I prefer to write a specification of how I intend the code to function. Using the specification from earlier I’ll plan out the code and show the expected results. 
 
     //Success Alert
     @Html.Alert(text:"message").Success() [.HideCloseButton().Attributes(object)] //Fluent
@@ -285,11 +285,11 @@ Designing a fluent API requires some planning; again I prefer to write a specifi
                           <a href="" class="close">×</a>
     </div>
     
-For the Alert helper we’ll be eliminating the need to specify the alert style as an enumerator and instead just call a method that defines the style by name. In this example we’ll use interfaces to chain our methods together so the user is guided through the options. In addition to guiding the user, we can control what options are available as well, for example when the style is set only the HideCloseButton and Attributes methods will be available.
+For the **Alert** helper, we’ll be eliminating the need to specify the alert style as an enumerator and instead just call a method that defines the style by name. In this example we’ll use interfaces to chain our methods together so the user is guided through the options. In addition to guiding the user, we can control what options are available as well - for example, when the style is set, only the **HideCloseButton **and **Attributes** methods will be available.
 
-To create the API we’ll need to define an interface for setting the style and a second interface for setting the remaining options. Our Alert helper will implement both interfaces.
+To create the API we’ll need to define an interface for setting the style, and a second interface for setting the remaining options. Our **Alert **helper will implement both interfaces.
 
-The IAlertBox interface outlines three method signatures, Success, Warning, and Info. These methods will return the IAlertBoxFluentOptions interface. We will use these methods to set our alert style.
+The **IAlertBox** interface outlines three method signatures - **Success**, **Warning**, and **Info** - which will all return the **IAlertBoxFluentOptions** interface. We will use these methods to set our alert style:
 
     public interface IAlertBox : IAlertBoxFluentOptions
     {
@@ -298,7 +298,7 @@ The IAlertBox interface outlines three method signatures, Success, Warning, and 
         IAlertBoxFluentOptions Info();
     }
 
-The IAlertBoxFluentOptions interface outlines the rest of the options for the Alert. The method signatures HideCloseButton and Attributes also return IAlertBoxFluentOptions, this will prevent the style option from being set again.
+The **IAlertBoxFluentOptions** interface outlines the rest of the options for the **Alert**. The method signatures **HideCloseButton** and **Attributes** also return **IAlertBoxFluentOptions**, which will prevent the style option from being set again.
 
     public interface IAlertBoxFluentOptions : IHtmlString
     {
@@ -306,7 +306,7 @@ The IAlertBoxFluentOptions interface outlines the rest of the options for the Al
         IAlertBoxFluentOptions Attributes(object htmlAttributes);
     }
 
-Now that we have defined our interfaces, we will need to create a class which implements IAlertBoxFluentOptions. Because the class will be returned at the end of the method call, it will also be responsible for rendering HTML and should function as an HTML Helper which implements the IHtmlString interface.
+Now that we have defined our interfaces, we will need to create a class which implements **IAlertBoxFluentOptions**. Because the class will be returned at the end of the method call, it will also be responsible for rendering HTML and should function as an HTML Helper which implements the **IHtmlString** interface.
 
     public class AlertBoxFluentOptions : IHtmlString, IAlertBoxFluentOptions
     {
@@ -338,9 +338,9 @@ Now that we have defined our interfaces, we will need to create a class which im
         }
     }
 
-The AlertBoxFluentHelpler class is essentially extending the functionality of the AlertBox class. The AlertBoxFluentHelper needs to be able to call back to the AlertBox we began building and set properties and call the render method, to accomplish these task we will pass an instance of AlerBox in the constructor of the AlertFluentHelper. Using the AlertBox referenced as “parent”, we can call the parent’s ToString and ToHtmlString methods and return the results.
+The **AlertBoxFluentHelper** class is essentially extending the functionality of the **AlertBox** class. The helper needs to be able to call back to the **AlertBox** we began building to set properties and call the render method, and to accomplish these task we will pass an instance of **AlertBox** in the constructor of the **AlertFluentHelper**. Using the **AlertBox** referenced as “parent”, we can call the parent’s **ToString** and **ToHtmlString** methods and return the results.
 
-To complete the fluent API we need to implement both IAlertBox and IAlertBoxFluentHelperOptions in the AlertBox class. Each method will be responsible for setting the desired value and returns a new AlertBoxFluentOptions object passing itself to the constructor.
+To complete the Fluent API we need to implement both **IAlertBox** and **IAlertBoxFluentHelperOptions** in the **AlertBox** class. Each method will be responsible for setting the desired value, and returns a new **AlertBoxFluentOptions** object passing itself to the constructor.
 
 		#region FluentAPI
 
@@ -395,22 +395,23 @@ To complete the fluent API we need to implement both IAlertBox and IAlertBoxFlue
         }
         #endregion //FluentAPI
 
-The fluent API is now complete and ready to be used.
+The Fluent API is now complete and ready to be used.
 
 ![Intellasense shows us the available options for setting the style](./images/fluent-api-set-style.jpg)
 
 ![Setting the options, styles are no longer an option](./images/fluent-api-set-attributes.jpg)
 
-The code required for creating a fluent API may seem unnecessary or overly complex for this example, however more complex HTML Helpers could greatly benefit from this type of API. Complexity, frequency of use and the type of end user your HTML Helper is being designed for are all considerations when for including a fluent API for your project.
+While the code required for creating a Fluent API may seem unnecessary or overly complex for this example, more complex HTML Helpers could greatly benefit from this type of API. Complexity, frequency of use, and the type of end user your HTML Helper is being designed for are all considerations when for including a Fluent API for your project.
 
 ##STRONGLY TYPED HELPERS
 
-Finally we’ll complete our overview of custom HTML Helpers by learning about strongly typed HTML Helpers. If you are already familiar with MVC you have probably seen or used strongly typed HTML Helpers. These helpers use the ElementFor convention, meaning the helper has a For suffix indicating it is strongly typed.
-To create a strongly typed helper we need to understand what makes them different from regular HTML Helpers. Strongly typed helpers are used to pass data from the Model to the Helper using expression syntax. HtmlHelper<TModel> class is a strongly typed subclass of the HtmlHelper class. 
+Finally we’ll complete our overview of custom HTML Helpers by learning about strongly typed HTML Helpers. If you are already familiar with MVC, then you have probably seen or used strongly typed HTML Helpers. These helpers use the ElementFor convention, meaning the helper has a **For** suffix to indicate that it is strongly typed.
 
-In addition to HtmlHelper<TModel> we will be using Expression<Func<T,T>> to collect information about the Model. Expression<Func<T,T>>, part of LINQ, represents an expression tree of a delegate which accepts a parameter and returns a result. When writing HTML Helpers the expression will allow the Helper to accept lambda expressions as parameters. All of the hard work of extracting data from the Model via lambda expression has been done for us in MVC; the method ModelMetadata.FromLambdaExpression will return the Model data based on the expression.
+To create a strongly typed helper we need to understand what makes them different from regular HTML Helpers. Strongly typed helpers are used to pass data from the Model to the helper using expression syntax. The **HtmlHelper<TModel>** class is a strongly typed subclass of the **HtmlHelper** class. 
 
-Since we already have the basic Alert Html Helper built, we only need to create additional extension methods and allow them to call the Alert helper.
+In addition to **HtmlHelper<TModel>**, we will be using **Expression<Func<T,T>>** to collect information about the Model. **Expression<Func<T,T>>**, which is part of LINQ, represents an expression tree of a delegate which accepts a parameter and returns a result. When writing HTML Helpers, the expression will allow the Helper to accept lambda expressions as parameters. All of the hard work of extracting data from the Model via lambda expression has been done for us in MVC; the **ModelMetadata.FromLambdaExpression** method will return the Model data based on the expression.
+
+Since we already have the basic **Alert** Html Helper built, we only need to create additional extension methods and allow them to call the **Alert** helper:
 
         public static AlertBox AlertFor<TModel, TTextProperty, TStyleProperty>(this HtmlHelper<TModel> html,
             Expression<Func<TModel, TTextProperty>> textExpression,
@@ -425,16 +426,16 @@ Since we already have the basic Alert Html Helper built, we only need to create 
             return new AlertBox(text, alertStyle, hideCloseButton, htmlAttributes);
         }
 
-Usage:
+In usage you get this:
 
     @Html.AlertFor(m => m.AlertBoxText, m => m.AlertBoxStyle)
 
-The strongly typed HTML Helpers provide better compile time suport and benefit from intellisense. Adding this option to your HTML Helper extends its usefulness and gives the end user more flexibility.
+The strongly typed HTML helpers provide better compile time support and benefit from intellisense. Adding this option to your HTML helper extends its usefulness, and gives the end user more flexibility.
 
 ##CONSIDERATIONS
 
-HTML Helpers are intended to be used to save time by making our code more reusable. When creating HTML Helpers you should consider how often the HTML is going to be used and how the code will be used in a project. Even though HTML Helpers save time, they are an investment. Choosing when to create one and what level of configuration is needed should be decided on a per project basis. 
-If your goal is to simplify a project then a basic HTML Helper will due. If you plan to use the code across multiple projects or create a suite of tools then Fluent APIs and strongly typed variation of your helpers will increase the value to the end user.
+HTML helpers are intended to save time by making our code more reusable. As a result, when creating HTML Helpers, you should consider how often the HTML is going to be used and how the code will be used in a project. Even though HTML helpers save time, they are also an investment. Choosing when to create one and what level of configuration is needed should be decided on a per project basis.
+If your goal is to simplify a project, then a basic HTML helper will due. If you plan to use the code across multiple projects, or to create a suite of tools, then Fluent APIs and strongly typed variations of your helpers will increase the value to the end user.
 ##FINAL RESULTS
-Throughout this article common practices for creating custom HTML Helpers have been identified. HTML Helpers are a powerful tool in MVC used to encapsulate reusable HTML fragments. I’ve used the custom Alert helper to demonstrate how to create a basic implementation, a fluent API configuration and the strongly typed convention. The complete project containing all source code, unit tests and MVC solution can be downloaded from GitHub.
+Custom HTML helpers are a powerful tool in MVC, used to encapsulate reusable HTML fragments and, throughout this article, we've identified common practices for creating them. I’ve used the custom **Alert** helper to demonstrate how to create a basic implementation, a Fluent API configuration and the strongly typed convention and the complete project, containing all source code, unit tests and the MVC solution, [**can be downloaded from GitHub**](https://github.com/EdCharbeneau/FluentHtmlHelpers/tree/SimpleTalkArticle "Custom HTML Helpers for MVC on Github").
 
