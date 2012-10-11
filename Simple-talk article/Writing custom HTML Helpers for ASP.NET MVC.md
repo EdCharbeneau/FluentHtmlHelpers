@@ -9,7 +9,7 @@ In MVC development, HTML helpers replace the server control, but the similaritie
 
 The HTML helper, in most cases, is a method that returns a string. When we call a helper in a View using the razor syntax **@Html**, we are accessing the Html property of the View, which is an instance of the HtmlHelper class.
 
-Writing extensions for the **HtmlHelper** class will allow us to create our own custom helpers to encapsulate complex HTML markup. Custom helpers also promote the use of reusable code and are unit testable. Custom helpers can be configured by passing values to the constructor, via fluent configuration, strongly typing, or a combination of both, and ultimately return a string. 
+Writing extensions for the **HtmlHelper** class will allow us to create our own custom helpers to encapsulate complex HTML markup. Custom helpers also promote the use of reusable code and are unit testable. Custom helpers can be configured by passing values to the constructor, via fluent configuration, strongly typed parameters, or a combination of both, and ultimately return a string. 
 
 ##HOW TO BEGIN
 
@@ -29,9 +29,7 @@ With our code targeted, we’ll examine the alert markup and see how we can brea
 
 Personally, once I have my HTML defined, I prefer to start writing a specification before I do anything else. Writing a specification isn’t a necessary step for creating a custom HTML helper, but it gives me a guide to how the HTML helper will function and what the desired syntax will be. A spec will also promote the use of semantic code, which improves discoverability for others that may be using the helper.
 
-Using a text file, I spec out how the helper will function and, since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements parameters, we’ll allow HTML attributes to be passed to the helper as well (which I'll return to once we have our basic implementation up and running). Each configuration of the **Alert** helper is written out in the spec so it can be followed during implementation.
-
-AlertHelperSpec.html
+Using a text file, I spec out how the helper will function and, since I will be unit testing the code, I’ll save the spec to my test project. There are several parameters that will be required to configure the Alert element: the text to be displayed, the style of the alert, and a close button that can be toggled. I’ll also be giving the Alert a default configuration that will only require that the text parameter be set. In addition to the elements configuration, custom attributes will be configurable through the **htmlAttributes** parameter as an anonymous object. Each configuration of the **Alert** helper is written out in the spec so it can be followed during implementation.
 
     //Given the Alert HTML Helper method
     
@@ -80,7 +78,50 @@ First, we need to create an instance of the **HtmlHelper** class so our extensio
 
 So, before we can write our test, we will need to create an instance of the **HtmlHelper** class. However, the **HtmlHelper** class has no default constructor, so a little work must be done up front to get an instance. To create an instance of **HtmlHelper**, we must specify a context and view data container - for the scope of this article, fakes will do just fine. Since each test will require an instance of **HtmlHelper**, I’ve created an **HtmlHelperFactory** class to create the instances.
 
-###HtmlHelperFactory
+	//Creates an HtmlHelper for unit testing
+    class HtmlHelperFactory
+    {
+        /// <summary>
+        /// Create a new HtmlHelper with a fake context and container
+        /// </summary>
+        /// <returns>HtmlHelper</returns>
+        public static HtmlHelper Create()
+        {
+            var vc = new ViewContext();
+            vc.HttpContext = new FakeHttpContext();
+            var html = new HtmlHelper(vc, new FakeViewDataContainer());
+            return html;
+        }
+
+        private class FakeHttpContext : HttpContextBase
+        {
+            private readonly Dictionary<object, object> items = new Dictionary<object, object>();
+
+            public override IDictionary Items
+            {
+                get
+                {
+                    return items;
+                }
+            }
+        }
+
+        private class FakeViewDataContainer : IViewDataContainer
+        {
+            private ViewDataDictionary viewData = new ViewDataDictionary();
+            public ViewDataDictionary ViewData
+            {
+                get
+                {
+                    return viewData;
+                }
+                set
+                {
+                    viewData = value;
+                }
+            }
+        }
+    }
 
 Now that the **HtmlHelperFactory** is available, getting an instance of HtmlHelper is as simple as calling **HtmlHelperFactory.Create()**.
 
