@@ -473,10 +473,26 @@ In usage you get this:
 
 The strongly typed HTML helpers provide better compile time support and benefit from intellisense. Adding this option to your HTML helper extends its usefulness, and gives the end user more flexibility.
 
+##USAGE
+
+Once the custom helper is complete simply add a refernce to your project and call your helper from the view.
+    
+    @using MyHelpers;
+    @Html.Alert("Message")
+    @Html.Alert("Message").Success()
+    @Html.Alert("Message").Warning()
+    @Html.Alert("Message").Info()
+
+![Finished product](./images/alert-box-usage.jpg)
+
+
 ##CONSIDERATIONS
 
 HTML helpers are intended to save time by making our code more reusable. As a result, when creating HTML Helpers, you should consider how often the HTML is going to be used and how the code will be used in a project. Even though HTML helpers save time, they are also an investment. Choosing when to create one and what level of configuration is needed should be decided on a per project basis.
+
 If your goal is to simplify a project, then a basic HTML helper will due. If you plan to use the code across multiple projects, or to create a suite of tools, then Fluent APIs and strongly typed variations of your helpers will increase the value to the end user.
-##FINAL RESULTS
+
+##IN CONCLUSION
+
 Custom HTML helpers are a powerful tool in MVC, used to encapsulate reusable HTML fragments and, throughout this article, we've identified common practices for creating them. I’ve used the custom **Alert** helper to demonstrate how to create a basic implementation, a Fluent API configuration and the strongly typed convention and the complete project, containing all source code, unit tests and the MVC solution, [**can be downloaded from GitHub**](https://github.com/EdCharbeneau/FluentHtmlHelpers/tree/SimpleTalkArticle "Custom HTML Helpers for MVC on Github").
 
